@@ -59,13 +59,6 @@ extern ssize_t ksu_kernel_read_compat(struct file *p, void *buf, size_t count,
 extern ssize_t ksu_kernel_write_compat(struct file *p, const void *buf,
                                        size_t count, loff_t *pos);
 
-#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 10, 0) ||                           \
-    defined(KSU_COMPAT_IS_HISI_LEGACY) ||                                      \
-    defined(KSU_COMPAT_IS_HISI_LEGACY_HM2) ||                                  \
-    defined(CONFIG_KSU_ALLOWLIST_WORKAROUND)
-extern struct key *init_session_keyring;
-#endif
-
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 0, 0)
 #define ksu_access_ok(addr, size) access_ok(addr, size)
 #else
