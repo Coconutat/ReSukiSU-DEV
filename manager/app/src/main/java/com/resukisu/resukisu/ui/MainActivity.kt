@@ -511,7 +511,7 @@ class MainActivity : ComponentActivity() {
                         val sceneState =
                             rememberSceneState(
                                 entries = entries,
-                                sceneStrategy = SinglePaneSceneStrategy(),
+                                sceneStrategies = listOf(SinglePaneSceneStrategy()),
                                 sceneDecoratorStrategies = emptyList(),
                                 sharedTransitionScope = null,
                                 onBack = {
