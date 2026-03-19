@@ -218,6 +218,16 @@ $(info -- $(REPO_NAME)/compat/samsung: SEC_SELINUX_PORTING_COMMON found)
 ccflags-y += -DSAMSUNG_SELINUX_PORTING
 endif
 
+# For Huawei EMUI10+ Cheak  
+# Scan Kernel Tree to find CONFIG_HKIP_SELINUX_PROT in ebitmap.h
+ifeq ($(shell grep -q "CONFIG_HKIP_SELINUX_PROT" $(srctree)/security/selinux/ss/ebitmap.h 2>/dev/null; echo $$?),0)
+  $(info -- $(REPO_NAME): CONFIG_HKIP_SELINUX_PROT found! Exporting CONFIG_IS_HISI_HM2)
+  export CONFIG_IS_HISI_HM2 := 1
+  ccflags-y += -DCONFIG_IS_HISI_HM2=1
+else
+  $(info -- $(REPO_NAME): Standard kernel detected (no CONFIG_HKIP_SELINUX_PROT).)
+endif
+
 # Function proc_ops check
 ifeq ($(shell grep -q "struct proc_ops " $(srctree)/include/linux/proc_fs.h; echo $$?),0)
 $(info -- $(REPO_NAME)/compat: proc_ops found)
@@ -272,16 +282,6 @@ $(info -- You have not integrated susfs in your kernel yet.)
 $(info -- Read: https://gitlab.com/simonpunk/susfs4ksu)
 $(error You should integrate susfs in your kernel.)
 endif
-endif
-
-## For Huawei EMUI10+ Cheak  
-# Scan Kernel Tree to find CONFIG_HKIP_SELINUX_PROT in ebitmap.h
-ifeq ($(shell grep -q "CONFIG_HKIP_SELINUX_PROT" $(srctree)/security/selinux/ss/ebitmap.h 2>/dev/null; echo $$?),0)
-  $(info -- $(REPO_NAME): CONFIG_HKIP_SELINUX_PROT found! Exporting CONFIG_IS_HISI_HM2)
-  export CONFIG_IS_HISI_HM2 := 1
-  ccflags-y += -DCONFIG_IS_HISI_HM2=1
-else
-  $(info -- $(REPO_NAME): Standard kernel detected (no CONFIG_HKIP_SELINUX_PROT).)
 endif
 
 # manual hook check
