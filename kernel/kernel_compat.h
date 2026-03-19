@@ -15,20 +15,23 @@
  * Huawei Hisi Kernel EBITMAP Enable or Disable Flag ,
  * From ss/ebitmap.h
  */
-#if ((LINUX_VERSION_CODE >= KERNEL_VERSION(4, 9, 0)) && (LINUX_VERSION_CODE < KERNEL_VERSION(4, 10, 0))) || \
-    ((LINUX_VERSION_CODE >= KERNEL_VERSION(4, 14, 0)) && (LINUX_VERSION_CODE < KERNEL_VERSION(4, 15, 0)))
-    #if defined(HISI_SELINUX_EBITMAP_RO) && !defined(CONFIG_IS_HISI_HM2)
-        #define CONFIG_IS_HW_HISI_LEGACY 1
-    #endif
+#if ((LINUX_VERSION_CODE >= KERNEL_VERSION(4, 9, 0)) &&                        \
+     (LINUX_VERSION_CODE < KERNEL_VERSION(4, 10, 0))) ||                       \
+    ((LINUX_VERSION_CODE >= KERNEL_VERSION(4, 14, 0)) &&                       \
+     (LINUX_VERSION_CODE < KERNEL_VERSION(4, 15, 0)))
+#if defined(HISI_SELINUX_EBITMAP_RO) && !defined(CONFIG_IS_HISI_HM2)
+#define CONFIG_IS_HW_HISI_LEGACY 1
+#endif
 #endif
 
 /* 
 * For EMUI 10+ or HarmonyOS2 Based EMUI10+ Devices
 */
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 14, 0)) && (LINUX_VERSION_CODE < KERNEL_VERSION(4, 15, 0))
-    #if defined(CONFIG_IS_HISI_HM2)
-        #define CONFIG_IS_HW_HISI_LEGACY_HM2 1
-    #endif
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 14, 0)) &&                        \
+    (LINUX_VERSION_CODE < KERNEL_VERSION(4, 15, 0))
+#if defined(CONFIG_IS_HISI_HM2)
+#define CONFIG_IS_HW_HISI_LEGACY_HM2 1
+#endif
 #endif
 
 /*
@@ -55,7 +58,9 @@ extern ssize_t ksu_kernel_write_compat(struct file *p, const void *buf,
                                        size_t count, loff_t *pos);
 
 #if LINUX_VERSION_CODE < KERNEL_VERSION(4, 10, 0) ||                           \
-    defined(CONFIG_IS_HW_HISI_LEGACY) || defined(CONFIG_IS_HW_HISI_LEGACY_HM2)|| defined(CONFIG_KSU_ALLOWLIST_WORKAROUND)
+    defined(CONFIG_IS_HW_HISI_LEGACY) ||                                       \
+    defined(CONFIG_IS_HW_HISI_LEGACY_HM2) ||                                   \
+    defined(CONFIG_KSU_ALLOWLIST_WORKAROUND)
 extern struct key *init_session_keyring;
 #endif
 
