@@ -252,8 +252,7 @@ pub fn exec_stage_script(stage: &str, block: bool) -> Result<()> {
 
     foreach_active_module(|module| {
         if metamodule_dir.as_ref().is_some_and(|meta_dir| {
-            canonicalize(module)
-                .is_ok_and(|resolved| resolved == *meta_dir)
+            canonicalize(module).is_ok_and(|resolved| resolved == *meta_dir)
         }) {
             return Ok(());
         }
@@ -319,8 +318,8 @@ pub fn prune_modules() -> Result<()> {
         let module_id = module.file_name().and_then(|n| n.to_str()).unwrap_or("");
 
         // Check if this is a metamodule
-        let is_metamodule = read_module_prop(module)
-            .is_ok_and(|props| metamodule::is_metamodule(&props));
+        let is_metamodule =
+            read_module_prop(module).is_ok_and(|props| metamodule::is_metamodule(&props));
 
         if is_metamodule {
             info!("Removing metamodule symlink");
