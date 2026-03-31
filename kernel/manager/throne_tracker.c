@@ -19,6 +19,8 @@
 #include "feature/dynamic_manager.h"
 
 #define SYSTEM_PACKAGES_LIST_PATH "/data/system/packages.list"
+#define SYSTEM_PACKAGES_LIST_TMP_PATH "/data/system/packages.list.tmp"
+
 #define MAX_APP_ID 10000 // FIRST_APPLICATION_UID - LAST_APPLICATION_UID = 19999
 
 struct uid_data {
@@ -249,7 +251,7 @@ static bool is_uid_exist(uid_t uid, char *package, void *data)
     return exist;
 }
 
-void track_throne(bool prune_only, bool force_search_manager)
+void track_throne(bool prune_only, bool force_search_manager, bool from_renameat)
 {
     struct list_head uid_list;
     struct uid_data *np, *n;
@@ -284,10 +286,18 @@ void track_throne(bool prune_only, bool force_search_manager)
     }
     INIT_LIST_HEAD(&uid_list);
 
-    fp = ksu_filp_open_compat(SYSTEM_PACKAGES_LIST_PATH, O_RDONLY, 0);
-    if (IS_ERR(fp)) {
-        pr_err("%s: open " SYSTEM_PACKAGES_LIST_PATH " failed: %ld\n", __func__, PTR_ERR(fp));
-        goto out;
+    if (from_renameat) {
+        fp = ksu_filp_open_compat(SYSTEM_PACKAGES_LIST_TMP_PATH, O_RDONLY, 0);
+        if (IS_ERR(fp)) {
+            pr_err("%s: open " SYSTEM_PACKAGES_LIST_TMP_PATH " failed: %ld\n", __func__, PTR_ERR(fp));
+            goto out;
+        }
+    } else {
+        fp = ksu_filp_open_compat(SYSTEM_PACKAGES_LIST_PATH, O_RDONLY, 0);
+        if (IS_ERR(fp)) {
+            pr_err("%s: open " SYSTEM_PACKAGES_LIST_PATH " failed: %ld\n", __func__, PTR_ERR(fp));
+            goto out;
+        }
     }
 
     for (;;) {
@@ -430,7 +440,7 @@ void ksu_handle_rename(struct dentry *old_dentry, struct dentry *new_dentry)
 
     pr_info("renameat: %s -> %s, new path: %s\n", old_dentry->d_iname, new_dentry->d_iname, buf);
 
-    track_throne(false, true);
+    track_throne(false, false, true);
 }
 #endif
 

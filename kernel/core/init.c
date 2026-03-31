@@ -187,7 +187,7 @@ int __init kernelsu_init(void)
 #endif
 
         ksu_boot_completed = true;
-        track_throne(false, true);
+        track_throne(false, true, false);
 
         if (!getenforce()) {
             pr_info("Permissive SELinux, enforcing\n");

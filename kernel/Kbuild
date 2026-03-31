@@ -175,7 +175,7 @@ else
           kernelsu-objs += hook/lsm_hooks.o
       else
         ifndef CONFIG_KSU_DISABLE_MANAGER
-          kernelsu-objs += pkg_observer.o
+          kernelsu-objs += manager/pkg_observer.o
         endif
       endif
   endif
